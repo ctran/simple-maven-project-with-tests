@@ -1,16 +1,32 @@
 // https://jenkins.io/doc/book/pipeline/syntax/
 pipeline {
   agent {
-    docker 'maven:3.3.3'
+    kubernetes {
+      label 'slave-ci'
+      defaultContainer 'maven'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    owner: ci
+spec:
+  containers:
+  - name: maven
+    image: maven:3.6.0-jdk-8-alpine
+    command:
+    - cat
+    tty: true
+"""
+    }
   }
-
+  
   stages {
     stage('Build') {
       steps {
         checkout scm
-
-        configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-          sh "mvn -V -s $MAVEN_SETTINGS -B -Dmaven.test.failure.ignore clean install"
+        container('maven') {
+          sh "mvn -V -B -Dmaven.test.failure.ignore clean verify"
         }
       }
     }
@@ -18,14 +34,8 @@ pipeline {
     stage('Archive') {
       steps {
         junit '**/target/surefire-reports/TEST-*.xml'
-        archive 'target/*.jar'
+        archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.jar', onlyIfSuccessful: true
       }
-    }
-  }
-
-  post {
-    always {
-      deleteDir()
     }
   }
 }
