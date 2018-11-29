@@ -1,25 +1,6 @@
 // https://jenkins.io/doc/book/pipeline/syntax/
 pipeline {
-  agent {
-    kubernetes {
-      label 'slave-ci'
-      defaultContainer 'maven'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-  labels:
-    owner: ci
-spec:
-  containers:
-  - name: maven
-    image: maven:3.6.0-jdk-8-alpine
-    command:
-    - cat
-    tty: true
-"""
-    }
-  }
+  agent { label 'ci' }
   
   stages {
     stage('Build') {
