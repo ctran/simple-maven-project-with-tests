@@ -2,7 +2,7 @@
 pipeline {
   agent {
     kubernetes {
-      label 'slave-ci'
+      label 'agent-k8s'
       defaultContainer 'maven'
       yaml """
 apiVersion: v1
