@@ -38,4 +38,14 @@ spec:
       }
     }
   }
+  
+  post {
+    regression {
+      slackSend channel: '@cuong.tran', message: 'Failed'
+    }
+    
+    fixed {
+      slackSend channel: '@cuong.tran', message: 'Fixed'
+    }
+  }
 }
