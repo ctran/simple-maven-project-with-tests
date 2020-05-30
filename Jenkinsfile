@@ -40,12 +40,16 @@ spec:
   }
   
   post {
+    always {
+      slackSend channel: '@cuong.tran'
+    }
+    
     regression {
-      slackSend channel: '@cuong.tran', message: 'Failed'
+      slackSend channel: '@cuong.tran', message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
     
     fixed {
-      slackSend channel: '@cuong.tran', message: 'Fixed'
+      slackSend channel: '@cuong.tran', message: "Build fixed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
   }
 }
