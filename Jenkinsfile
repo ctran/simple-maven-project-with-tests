@@ -32,8 +32,7 @@ spec:
     }
 
     stage('Archive') {
-      steps {
-        junit '**/target/surefire-reports/TEST-*.xml'
+      steps {        
         archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.jar', onlyIfSuccessful: true
       }
     }
@@ -41,13 +40,20 @@ spec:
   
   post {
     unsuccessful {
-      slackSend channel: '@cuong.tran', color: 'warning',
-        message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+      script {
+        def summary = junit 'target/surefire-reports/TEST-*.xml'
+        slackSend (
+           channel: "@cuong.tran",
+           color: 'warning',
+           message: """Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|details>)
+           *Test Summary* - ${summary.totalCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}, Passed: ${summary.passCount}"""
+        )
+      }
     }
     
     fixed {
       slackSend channel: '@cuong.tran', color: 'good',
-        message: "Build fixed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+        message: "Build fixed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|details>)"
     }
   }
 }
