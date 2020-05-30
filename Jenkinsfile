@@ -41,7 +41,7 @@ spec:
   
   post {
     regression {
-      slackSend channel: '@cuong.tran', color: 'warning'
+      slackSend channel: '@cuong.tran', color: 'warning',
         message: "Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
     }
     
