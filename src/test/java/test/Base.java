@@ -30,6 +30,11 @@ import org.junit.internal.AssumptionViolatedException;
 class Base {
 
     protected void run() {
+        boolean failMode = "true".equals(System.getProperty("FAIL", System.getenv("FAIL")));
+        if (failMode) {
+            fail("oops");
+        }
+        
         double r = Math.random();
         if (r < 0.1) {
             fail("oops");
