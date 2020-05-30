@@ -45,7 +45,7 @@ spec:
         slackSend (
            channel: "@cuong.tran",
            color: 'warning',
-           message: """Build failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|details>)
+           message: """Build failed - <${env.RUN_DISPLAY_URL}|${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}>
            *Test Summary* - ${summary.totalCount}, Failures: ${summary.failCount}, Skipped: ${summary.skipCount}, Passed: ${summary.passCount}"""
         )
       }
@@ -53,7 +53,7 @@ spec:
     
     fixed {
       slackSend channel: '@cuong.tran', color: 'good',
-        message: "Build fixed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.RUN_DISPLAY_URL}|details>)"
+        message: "Build fixed - <${env.RUN_DISPLAY_URL}|${env.JOB_BASE_NAME} #${env.BUILD_NUMBER}>"
     }
   }
 }
